@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subhada's Celebration Buddy</title>
+<style>
+  :root{
+    --cream:#fbf7ef; --paper:#fffdf9; --ink:#4d4a46;
+    --rose:#a85b67; --rose-soft:#f3dfe2; --gold:#b99558;
+    --line:#eadfd3; --muted:#817a73;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:Georgia, "Times New Roman", serif;
+    background:var(--cream); color:var(--ink);
+    min-height:100vh; display:flex; justify-content:center; align-items:center;
+    padding:24px;
+  }
+  .shell{
+    width:min(920px,100%); min-height:680px; background:var(--paper);
+    border:1px solid var(--line); border-radius:24px; overflow:hidden;
+    box-shadow:0 18px 55px rgba(93,70,55,.10); display:grid;
+    grid-template-columns: 34% 66%;
+  }
+  .welcome{
+    padding:42px 34px; background:linear-gradient(160deg,#f8ece8,#fbf7ef 62%,#f4eadc);
+    border-right:1px solid var(--line); position:relative;
+  }
+  .welcome:after{
+    content:"✿"; position:absolute; right:22px; top:20px; color:#cda6a0;
+    font-size:30px; opacity:.65;
+  }
+  .small{font-size:12px; letter-spacing:2px; text-transform:uppercase; color:var(--rose); font-weight:bold}
+  h1{font-size:34px; line-height:1.08; margin:13px 0 12px; color:#554a45}
+  .tag{font-size:17px; line-height:1.55; margin-bottom:28px}
+  .date{font-size:15px; line-height:1.7; color:#665f58}
+  .flower{font-size:38px; margin:25px 0 10px; color:#b85d70}
+  .note{font-size:13px; line-height:1.6; color:var(--muted); margin-top:24px}
+  .chat{display:flex; flex-direction:column; min-width:0}
+  .chathead{padding:20px 24px; border-bottom:1px solid var(--line); background:#fffaf5}
+  .chathead strong{font-size:20px}
+  .status{font:13px Arial,sans-serif; color:#8b8178; margin-top:4px}
+  #messages{flex:1; padding:24px; overflow:auto; max-height:480px}
+  .msg{display:flex; margin:12px 0}
+  .msg.bot{justify-content:flex-start}
+  .msg.user{justify-content:flex-end}
+  .bubble{
+    max-width:82%; padding:12px 15px; border-radius:16px;
+    font-size:15px; line-height:1.5; white-space:pre-wrap;
+  }
+  .bot .bubble{background:#f5ebe7; border-bottom-left-radius:5px}
+  .user .bubble{background:var(--rose); color:white; border-bottom-right-radius:5px}
+  .quick{padding:0 24px 15px; display:flex; flex-wrap:wrap; gap:8px}
+  button{
+    border:1px solid #d8c2b9; background:#fffaf6; color:#695b54;
+    border-radius:18px; padding:8px 12px; cursor:pointer; font-family:Arial,sans-serif;
+    font-size:13px;
+  }
+  button:hover{background:var(--rose-soft)}
+  .composer{display:flex; gap:9px; padding:15px 24px 22px; border-top:1px solid var(--line)}
+  input{
+    flex:1; min-width:0; border:1px solid #ddcfc5; border-radius:22px;
+    padding:12px 15px; outline:none; font-size:14px; font-family:Arial,sans-serif;
+  }
+  input:focus{border-color:#c6969e}
+  .send{background:var(--rose); color:white; border-color:var(--rose); padding:10px 17px}
+  .footer{font:11px Arial,sans-serif; color:#9a9088; text-align:center; padding:0 20px 13px}
+  @media(max-width:720px){
+    body{padding:0; align-items:stretch}
+    .shell{border-radius:0; min-height:100vh; grid-template-columns:1fr}
+    .welcome{padding:28px 24px; border-right:0; border-bottom:1px solid var(--line)}
+    .welcome .note{display:none}
+    h1{font-size:30px}
+    #messages{max-height:none}
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+  <section class="welcome">
+    <div class="small">Teachers' Day • 2026</div>
+    <h1>Subhada's<br>Celebration Buddy 🌸</h1>
+    <div class="tag">A little celebration, a lot of memories — and hopefully a lovely day together.</div>
+    <div class="date">
+      <b>13 September 2026</b><br>
+      11 AM onwards<br>
+      Subhada's Residency
+    </div>
+    <div class="flower">✿</div>
+    <div class="note">Ask anything about the celebration — or simply tap one of the options on the right.</div>
+  </section>
+
+  <section class="chat">
+    <div class="chathead">
+      <strong>Hi! 👋</strong>
+      <div class="status">I'm here to help with the celebration.</div>
+    </div>
+    <div id="messages"></div>
+
+    <div class="quick">
+      <button onclick="quick('event')">📅 Event details</button>
+      <button onclick="quick('cultural')">🎭 Cultural programme</button>
+      <button onclick="quick('quiz')">🏆 Quiz & prizes</button>
+      <button onclick="quick('venue')">📍 Venue & address</button>
+      <button onclick="quick('dress')">👗 Dress code</button>
+      <button onclick="quick('contact')">📞 Contact organisers</button>
+    </div>
+
+    <div class="composer">
+      <input id="input" placeholder="Ask me anything..." onkeydown="if(event.key==='Enter') send()">
+      <button class="send" onclick="send()">Send</button>
+    </div>
+    <div class="footer">Subhada's Teachers' Day Celebration • 13 September 2026</div>
+  </section>
+</div>
+
+<script>
+const data = {
+ event: `We're getting together on Sunday, 13 September 2026, from 11 AM onwards at Subhada's Residency. We'll have a general get-together, cake cutting, lunch and then a small cultural programme. We're planning to wrap things up around 6 PM. 🌸`,
+ cultural: `After lunch, we'll have a small cultural programme. Subhada will say a few words, we'll hear some student success stories, and there'll be performances/participation from students and ex-students. If you'd like to participate, we'd love to have you! 😊`,
+ quiz: `We'll throw in a few quiz questions during the cultural programme to keep everyone engaged. It's a casual quiz — whoever answers correctly can win a small prize! 🏆`,
+ venue: `The celebration will be held at Subhada's Residency.\n\n81/1, NS Sarani, North Ghosh Para, Bally, Howrah – 711227.`,
+ dress: `Ethnic or casual is absolutely fine. 😊 Just keep it comfortable, decent and suitable for a small Teachers' Day gathering.`,
+ contact: `You can reach any of the organisers:\n\nSubhada: 9804380267 / 8017666669\nSwagatadi: 9674312689\nSudiptoda: 9903950802\nSoumodip: 7439211980`,
+ welcome: `Welcome to Subhada's Teachers' Day Celebration! 🌸\n\nWe're putting together a warm, homely celebration and would love to have everyone be a part of it. Ask me anything about the day!`
+};
+
+function add(text, who='bot'){
+  const box=document.getElementById('messages');
+  const row=document.createElement('div'); row.className='msg '+who;
+  const b=document.createElement('div'); b.className='bubble'; b.textContent=text;
+  row.appendChild(b); box.appendChild(row); box.scrollTop=box.scrollHeight;
+}
+function quick(type){
+  const labels={event:'Event details',cultural:'Cultural programme',quiz:'Quiz & prizes',venue:'Venue & address',dress:'Dress code',contact:'Contact organisers'};
+  add(labels[type],'user'); setTimeout(()=>add(data[type]),180);
+}
+function send(){
+  const input=document.getElementById('input'); const q=input.value.trim(); if(!q)return;
+  add(q,'user'); input.value='';
+  setTimeout(()=>add(answer(q)),180);
+}
+function answer(q){
+  const x=q.toLowerCase();
+  if(x.includes('alcohol')||x.includes('drink')||x.includes('liquor'))
+    return `Just a small request — since we're celebrating at a residential place, alcohol consumption is strictly prohibited. Let's keep the day comfortable, respectful and enjoyable for everyone. 😊`;
+  if(x.includes('address')||x.includes('where')||x.includes('venue')||x.includes('location')||x.includes('reach'))
+    return data.venue;
+  if(x.includes('when')||x.includes('date')||x.includes('time')||x.includes('start')||x.includes('end')||x.includes('6 pm')||x.includes('6pm'))
+    return data.event;
+  if(x.includes('quiz')||x.includes('prize')||x.includes('competition'))
+    return data.quiz;
+  if(x.includes('culture')||x.includes('perform')||x.includes('speech')||x.includes('success stor')||x.includes('participate'))
+    return data.cultural;
+  if(x.includes('dress')||x.includes('wear')||x.includes('clothes'))
+    return data.dress;
+  if(x.includes('contact')||x.includes('phone')||x.includes('number')||x.includes('call'))
+    return data.contact;
+  if(x.includes('lunch')||x.includes('cake')||x.includes('food')||x.includes('get together'))
+    return `We'll have a general get-together, followed by cake cutting and lunch. After lunch, the cultural programme will begin. 🎂🍽️`;
+  if(x.includes('student')||x.includes('ex student')||x.includes('alumni'))
+    return `Yes! Students and ex-students are welcome to participate in the cultural programme. We'd love to have everyone's involvement and make the celebration special. ❤️`;
+  if(x.includes('hello')||x.includes('hi')||x.includes('hey'))
+    return `Hi! 😊 What would you like to know about Subhada's Teachers' Day Celebration?`;
+  return `I'm happy to help! 😊 You can ask me about the event timing, venue, cultural programme, quiz & prizes, lunch, dress code, participation, or organiser contacts.`;
+}
+add(data.welcome);
+</script>
+</body>
+</html>
