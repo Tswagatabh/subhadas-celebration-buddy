@@ -117,54 +117,97 @@
 
 <script>
 const data = {
- event: `We're getting together on Sunday, 13 September 2026, from 11 AM onwards at Subhada's Residency. We'll have a general get-together, cake cutting, lunch and then a small cultural programme. We're planning to wrap things up around 6 PM. 🌸`,
- cultural: `After lunch, we'll have a small cultural programme. Subhada will say a few words, we'll hear some student success stories, and there'll be performances/participation from students and ex-students. If you'd like to participate, we'd love to have you! 😊`,
- quiz: `We'll throw in a few quiz questions during the cultural programme to keep everyone engaged. It's a casual quiz — whoever answers correctly can win a small prize! 🏆`,
- venue: `The celebration will be held at Subhada's Residency.\n\n81/1, NS Sarani, North Ghosh Para, Bally, Howrah – 711227.`,
- dress: `Ethnic or casual is absolutely fine. 😊 Just keep it comfortable, decent and suitable for a small Teachers' Day gathering.`,
- contact: `You can reach any of the organisers:\n\nSubhada: 9804380267 / 8017666669\nSwagatadi: 9674312689\nSudiptoda: 9903950802\nSoumodip: 7439211980`,
- welcome: `Welcome to Subhada's Teachers' Day Celebration! 🌸\n\nWe're putting together a warm, homely celebration and would love to have everyone be a part of it. Ask me anything about the day!`
+  event: `We're getting together on Sunday, 13 September 2026, from 11 AM onwards at Subhada's Residency. We'll have a general get-together, cake cutting, lunch and then a small cultural programme. We're planning to wrap things up around 6 PM. 🌸`,
+  cultural: `After lunch, we'll have a small cultural programme. Subhada will say a few words, we'll hear some student success stories, and students and ex-students can participate in the cultural programme. If you'd like to participate, we'd love to have you! 😊`,
+  quiz: `We'll throw in a few quiz questions during the cultural programme to keep everyone engaged. It's a casual quiz, and whoever answers correctly can win a small prize! 🏆`,
+  venue: `The celebration will be held at Subhada's Residency.
+
+81/1, NS Sarani, North Ghosh Para, Bally, Howrah – 711227.`,
+  dress: `Ethnic or casual is absolutely fine. 😊 Just keep it comfortable, decent and suitable for a small Teachers' Day gathering.`,
+  contact: `You can reach any of the organisers:
+
+Subhada: 9804380267 / 8017666669
+Swagatadi: 9674312689
+Sudiptoda: 9903950802
+Soumodip: 7439211980`,
+  welcome: `Welcome to Subhada's Teachers' Day Celebration! 🌸
+
+We're putting together a warm, homely celebration and would love to have everyone be a part of it. Ask me anything about the day!`
+};
+
+const labels = {
+  event: 'Event details',
+  cultural: 'Cultural programme',
+  quiz: 'Quiz & prizes',
+  venue: 'Venue & address',
+  dress: 'Dress code',
+  contact: 'Contact organisers'
 };
 
 function add(text, who='bot'){
   const box=document.getElementById('messages');
-  const row=document.createElement('div'); row.className='msg '+who;
-  const b=document.createElement('div'); b.className='bubble'; b.textContent=text;
-  row.appendChild(b); box.appendChild(row); box.scrollTop=box.scrollHeight;
+  const row=document.createElement('div');
+  row.className='msg '+who;
+  const b=document.createElement('div');
+  b.className='bubble';
+  b.textContent=text;
+  row.appendChild(b);
+  box.appendChild(row);
+  box.scrollTop=box.scrollHeight;
+  return row;
 }
+
 function quick(type){
-  const labels={event:'Event details',cultural:'Cultural programme',quiz:'Quiz & prizes',venue:'Venue & address',dress:'Dress code',contact:'Contact organisers'};
-  add(labels[type],'user'); setTimeout(()=>add(data[type]),180);
+  add(labels[type], 'user');
+  setTimeout(async () => {
+    const reply = await askAI(labels[type]);
+    add(reply);
+  }, 120);
 }
-function send(){
-  const input=document.getElementById('input'); const q=input.value.trim(); if(!q)return;
-  add(q,'user'); input.value='';
-  setTimeout(()=>add(answer(q)),180);
+
+function setStatus(text){
+  const status=document.querySelector('.status');
+  if(status) status.textContent=text;
 }
-function answer(q){
-  const x=q.toLowerCase();
-  if(x.includes('alcohol')||x.includes('drink')||x.includes('liquor'))
-    return `Just a small request — since we're celebrating at a residential place, alcohol consumption is strictly prohibited. Let's keep the day comfortable, respectful and enjoyable for everyone. 😊`;
-  if(x.includes('address')||x.includes('where')||x.includes('venue')||x.includes('location')||x.includes('reach'))
-    return data.venue;
-  if(x.includes('when')||x.includes('date')||x.includes('time')||x.includes('start')||x.includes('end')||x.includes('6 pm')||x.includes('6pm'))
-    return data.event;
-  if(x.includes('quiz')||x.includes('prize')||x.includes('competition'))
-    return data.quiz;
-  if(x.includes('culture')||x.includes('perform')||x.includes('speech')||x.includes('success stor')||x.includes('participate'))
-    return data.cultural;
-  if(x.includes('dress')||x.includes('wear')||x.includes('clothes'))
-    return data.dress;
-  if(x.includes('contact')||x.includes('phone')||x.includes('number')||x.includes('call'))
-    return data.contact;
-  if(x.includes('lunch')||x.includes('cake')||x.includes('food')||x.includes('get together'))
-    return `We'll have a general get-together, followed by cake cutting and lunch. After lunch, the cultural programme will begin. 🎂🍽️`;
-  if(x.includes('student')||x.includes('ex student')||x.includes('alumni'))
-    return `Yes! Students and ex-students are welcome to participate in the cultural programme. We'd love to have everyone's involvement and make the celebration special. ❤️`;
-  if(x.includes('hello')||x.includes('hi')||x.includes('hey'))
-    return `Hi! 😊 What would you like to know about Subhada's Teachers' Day Celebration?`;
-  return `I'm happy to help! 😊 You can ask me about the event timing, venue, cultural programme, quiz & prizes, lunch, dress code, participation, or organiser contacts.`;
+
+async function askAI(question){
+  setStatus('Thinking…');
+  try {
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ message: question })
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.error || 'The assistant could not respond.');
+    }
+
+    return result.reply || `Sorry, I couldn't come up with an answer just now. Please contact one of the organisers.`;
+  } catch (error) {
+    console.error(error);
+    return `I'm having a little trouble connecting right now. 😊 Please try again in a moment, or contact one of the organisers if you need an immediate answer.`;
+  } finally {
+    setStatus("I'm here to help with the celebration.");
+  }
 }
+
+async function send(){
+  const input=document.getElementById('input');
+  const q=input.value.trim();
+  if(!q) return;
+
+  add(q,'user');
+  input.value='';
+
+  const typing = add('Thinking…');
+  const reply = await askAI(q);
+  typing.remove();
+  add(reply);
+}
+
 add(data.welcome);
 </script>
 </body>
