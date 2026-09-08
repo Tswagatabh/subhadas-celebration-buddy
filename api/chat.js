@@ -1,4 +1,4 @@
-const ALLOWED_ORIGIN = "https://tswagatabh.github.io";
+const ALLOWED_ORIGIN = "https://subhadas-celebration-buddy.vercel.app";
 
 const EVENT_KNOWLEDGE = `
 You are "Subhada's Celebration Buddy", a warm, casual and respectful AI assistant for Subhada's Teachers' Day Celebration.
