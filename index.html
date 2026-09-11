@@ -1,4 +1,6 @@
-<!-- Subhada Celebration Buddy v10: integrated conversational relationship engine -->
+<!-- Subhada Celebration Buddy v21: robust dress-code and timing intents -->
+<!-- Subhada Celebration Buddy v11: attendance and guest guidance -->
+<!-- Subhada Celebration Buddy v11: integrated conversational relationship engine -->
 <!-- Subhada Celebration Buddy v7: conversational alias/intent layer -->
 <!DOCTYPE html>
 <html lang="en">
@@ -169,51 +171,79 @@ Subhada's Residency
 </div>
 
 <script>
+const FORM_URL = 'https://docs.google.com/forms/d/1Q4e5gyiTi-bUDYTUIoRD8vCt3dbt_e0VP8lHlNJoloU/viewform';
+
 const answers = {
-  event: `We're getting together on Sunday, 13 September 2026, from 11 AM onwards at Subhada's Residency. We'll have a general get-together, cake cutting, lunch and then a small cultural programme. We're planning to wrap things up around 6 PM. 🌸`,
-  schedule: `The plan is: general get-together, cake cutting, lunch, and then a small cultural programme. The programme starts with Subhada's short speech, followed by student success stories and some quiz questions in between to keep everyone engaged. The day should end around 6 PM. 😊`,
-  cultural: `After lunch, we'll have a small cultural programme. Subhada will say a few words, we'll hear student success stories, and there will be performances as part of the programme. 😊`,
-  speech: `The cultural programme will begin with a short speech by Subhada. 🌸`,
-  success: `We'll have a segment where we hear students' success stories as part of the cultural programme. 😊`,
-  quiz: `We'll have a few quiz questions during the cultural programme to keep everyone engaged. Whoever answers correctly can win a small prize! 🏆`,
-  food: `Lunch is part of the celebration, after the cake cutting. 🍽️`,
-  cake: `Yes! Cake cutting is part of the celebration and will happen before lunch. 🎂`,
-  timing: `The celebration starts at 11 AM onwards on Sunday, 13 September 2026, and is expected to continue until around 6 PM.`,
-  date: `It's on Sunday, 13 September 2026. 🌸`,
-  venue: `The celebration will be held at Subhada's Residency.
-
-81/1, NS Sarani, North Ghosh Para, Bally, Howrah – 711227.
-
-For directions, transport, parking or nearby landmarks, please contact one of the organisers.`,
-  dress: `Ethnic or casual is absolutely fine. 😊 Just keep it comfortable, decent and suitable for a small Teachers' Day gathering.`,
-  participation: `Yes! Students and ex-students can participate in the cultural programme. 😊`,
-  nonstudent: `Participation in the cultural programme is limited to students and ex-students. 😊`,
-  contact: `You can reach any of the organisers:
-
-Subhada: 9804380267 / 8017666669
-Swagatadi: 9674312689
-Sudiptoda: 9903950802
-Soumodip: 7439211980`,
-  conduct: `It's a warm, homely celebration at a residential place, so everyone is requested to maintain decency and respect throughout the event. 😊`,
+  event: `Subhada's Teachers' Day Celebration will be held on Sunday, 13 September 2026, at Subhada's Residency. The celebration is planned as a warm get-together with cake cutting, lunch, a small cultural programme, student interactions, success stories and a fun quiz. 🌸`,
+  date: `The celebration will be held on Sunday, 13 September 2026. 😊 Teachers' Day in India is observed on 5 September every year, but Subhada's Teachers' Day Celebration is being held on 13 September because it is a Sunday, making it easier for students and ex-students to attend. 🌸`,
+  schedule: `The programme is planned from around 11 AM to 6 PM. We expect a general get-together, Subhada's short speech, student success stories, cake cutting, lunch, a small cultural programme, performances and a few fun quiz questions. The exact flow may change slightly during the day. 😊`,
+  program: `During the programme, there will be a general get-together, interactions with students, a short speech by Subhada, student success stories, cake cutting, lunch, a small cultural programme, performances and a few easy quiz questions. The programme is planned to continue until around 6 PM. 🎉`,
+  cultural: `Yes! A small cultural programme will be part of the celebration. There may be dancing, singing, stand-up, drama, instrumental performances and similar activities. 😊`,
+  speech: `Subhada will give a short speech as part of the programme. 🌸`,
+  success: `There will be a segment for student success stories as part of the celebration. 😊`,
+  quiz: `A few easy quiz questions may be asked while the programme is going on. The quiz is only for fun, so there is no need to prepare seriously. Anyone attending the programme can participate, and small prizes will be there for correct answers. 🏆`,
+  quizQuestions: `General, easy questions will be asked, and the quiz is absolutely for fun purposes. 😊`,
+  quizDifficulty: `No, the quiz questions will not be difficult. They will be general and easy, and the quiz is mainly for fun. 😊`,
+  quizPrize: `Yes! There will be small prizes for the quiz. 🏆`,
+  food: `Yes, lunch will be provided as part of the celebration. 🍽️ Lunch will be after the cake cutting ceremony.`,
+  lunch: `Lunch will be provided and is planned to start around 12:30–1 PM, after the cake cutting ceremony. 🍽️`,
+  cake: `Yes! There will be a cake cutting ceremony, and lunch will be served after the cake cutting. 🎂`,
+  snacks: `Cake will be there, and lunch will also be provided. Apart from these, please contact an organiser if you need information about any other food or snacks. 😊`,
+  ownFood: `You may bring your own food if you need to, but lunch will be provided as part of the celebration. 😊`,
+  timing: `The celebration is planned from around 11 AM to 6 PM on Sunday, 13 September 2026. 😊 The timing may change slightly during the programme. You may come and leave according to your convenience within the celebration timings, but I recommend coming by around 11–11:30 AM so you have enough time to enjoy, interact and take part in the activities. 🎉`,
+  arrival: `The programme is planned to start around 11 AM. You do not have to arrive at exactly 11 AM if that is difficult for you. 😊 You may come according to your convenience, but I recommend arriving around 11–11:30 AM so you have enough time to enjoy and interact with everyone.`,
+  arrivalLate: `Yes, you may come later according to your convenience. 😊 However, I recommend coming by around 11–11:30 AM so you have enough time to enjoy the celebration, interact with everyone and take part in the activities.`,
+  afterSixArrival: `The celebration is planned only until around 6 PM. If you are planning to arrive after 6 PM, please contact an organiser first, as the programme is expected to have ended by then.`,
+  leaving: `Yes, you may leave as per your convenience. 😊 The programme is planned until around 6 PM, so you may leave before or by 6 PM. However, I would recommend staying for the entire programme if possible, so you can enjoy all the activities and interactions before leaving. 🎉`,
+  afterSixLeaving: `The celebration is scheduled only until around 6 PM, so there will be no programme after 6 PM. 😊 If you are planning to leave later than 6 PM for any specific reason, please contact an organiser first.`,
+  venue: `The celebration will be held at Subhada's Residency.\n\n81/1, NS Sarani, North Ghosh Para, Bally, Howrah – 711227.\n\nIf you need directions or any other venue details, please contact one of the organisers.`,
+  reach: `The best way to get detailed directions depends on where you are coming from. 😊 Please contact one of the organisers and tell them your starting location; they can guide you with the proper route and transportation details.`,
+  landmark: `A nearby landmark is the Bally Ghosh Para Gas Office area in Bally. 📍 If you have difficulty finding the venue, please contact an organiser for guidance.`,
+  parking: `Yes, two-wheeler parking is available. If you are bringing a four-wheeler/car, please contact an organiser beforehand so they can guide you regarding parking. 🚗`,
+  bikeParking: `If you are coming by two-wheeler, you may park outside Subhada's residential place. 🛵`,
+  carParking: `If you are bringing a car or other four-wheeler, please contact an organiser beforehand for parking guidance. 🚗`,
+  dress: `There is no strict dress code. 😊 Ethnic or casual dress is absolutely fine. Just keep it comfortable, decent and suitable for a Teachers' Day gathering.`,
+  attendance: `Current students and ex-students of Subhada can attend the celebration. 😊 Registration through the Google Form is mandatory. If you have not filled it yet, please inform or confirm with an organiser before attending.`,
+  exStudent: `Yes, ex-students can attend. 😊 Please make sure you have prior confirmation and have completed the Google Form.`,
+  currentStudent: `Yes, current students can attend. 😊 Please make sure you have completed the Google Form.`,
+  guest: `The celebration is intended for Subhada's current students and ex-students. If the person you want to bring is not a current or ex-student of Subhada, they are not allowed to attend as a guest. If your friend, brother, sister or other person is themselves a current or ex-student, please inform an organiser beforehand and get confirmation.`,
+  family: `Family members who are not current or ex-students of Subhada are not allowed to attend. If a family member is themselves a current or ex-student, please inform an organiser beforehand and get confirmation.`,
+  form: `Yes, filling the Google Form is mandatory. 😊 Please complete it by 12 September 2026. If you need the form, you can use the registration link below:\n\n${FORM_URL}\n\nIf you have any problem accessing the form, please contact an organiser.`,
+  formDeadline: `Please make sure you fill in the Google Form by 12 September 2026. 😊`,
+  formNotFilled: `If you have not filled the Google Form yet, please inform or confirm with an organiser before coming. The registration form is mandatory. 😊`,
+  performance: `Yes, you may perform, but please inform an organiser beforehand and register through the Google Form. 😊`,
+  performanceTypes: `Generally, dancing, singing, stand-up, drama, instrumental performances and similar programmes are welcome. Please discuss or inform the organiser about your planned performance beforehand. 🎤🎭`,
+  sing: `Yes, of course! You may sing as part of the cultural programme. 😊 Please inform an organiser beforehand and register your performance.`,
+  dance: `Yes, you may dance as part of the cultural programme. 😊 Please inform an organiser beforehand and register your performance.`,
+  poem: `Yes, you may recite a poem as part of the cultural programme. 😊 Please inform an organiser beforehand and register your performance.`,
+  groupPerformance: `Yes, you may participate as a group. 😊 Please inform an organiser beforehand and register the performance.`,
+  performanceRegistration: `Yes, you need to register for a performance. Please also inform an organiser beforehand about what you plan to perform. 😊`,
+  contest: `Yes, you may participate in the activities/quiz. 😊 The quiz is for fun, and anyone attending the programme can participate.`,
+  rules: `Everyone is requested to maintain proper etiquette, decency and respect throughout the celebration. As this is a Teachers' Day celebration at a residential place, please be considerate towards everyone around you. 😊`,
+  keepInMind: `Please keep one thing in mind: this is a Teachers' Day celebration at a residential place. 😊 Respect everyone around you, maintain proper etiquette and decency, and help keep the atmosphere warm and enjoyable for everyone.`,
+  smoking: `Please ask one of the organisers regarding smoking at the venue. 😊`,
   alcohol: `No. As this is a Teachers' Day celebration, consumption of alcohol is strictly prohibited. 🚫`,
+  gift: `Yes, if you would like to, you may bring a gift for Subhada. 😊`,
+  bring: `You may bring water and any personal items you may need during the day. Apart from that, just come ready to enjoy the Teachers' Day celebration, interact with everyone and have a good time. 🌸`,
+  expectation: `You can expect a warm and enjoyable get-together with lunch, cake cutting, a small cultural programme, student interactions, success stories and a few fun quiz questions. 🎉`,
+  contact: `You can reach any of the organisers:\n\nSubhada: 9804380267 / 8017666669\nSwagatadi: 9674312689\nSudiptoda: 9903950802\nSoumodip: 7439211980`,
+  conduct: `It's a warm, homely celebration at a residential place, so everyone is requested to maintain decency, etiquette and respect throughout the event. 😊`,
   subhada: `Subhada is Subhabrata Bhattacharjee. He is the Founder & Director at Pointer Educare, Assistant Professor at SurTech College, Head of the Department at Khalisani Mahavidyalaya, Lecturer at Techno College Hooghly, and HOD of Bengal Business School. He is also an Educational Consultant with more than 16 years of experience in teaching and guiding students. 🌸`,
   swagatadi: `Swagata, also affectionately called Swagatadi, is the sister of Subhabrata Bhattacharjee (Subhada). She plays a major role in the decision-making and execution of Pointer Educare and is a core member of the management team. 🌸`,
   sudipta: `Sudipta Halder is a student of Subhada and also an Assistant Professor at Regent College. He plays a major role in teaching school-level students and is a decision-maker and core member of the management group. 🌸`,
   soumyadip: `Soumyadip is a student of Subhada and a core member of Pointer Educare and the management group. 🌸`,
-  relations: {
-    subhada_swagata: `Swagata (Swagatadi) is the sister of Subhabrata Bhattacharjee (Subhada). She plays a major role in the decision-making and execution of Pointer Educare and is a core member of the management team. 🌸`,
-    subhada_sudipta: `Sudipta Halder is a student of Subhabrata Bhattacharjee (Subhada). He is also an Assistant Professor at Regent College and a core member and decision-maker in the management group. 🌸`,
-    subhada_soumyadip: `Soumyadip is a student of Subhabrata Bhattacharjee (Subhada) and a core member of Pointer Educare and the management group. 🌸`,
-    swagatadi_sudipta: `Swagata (Swagatadi) and Sudipta Halder are both core members of the management group associated with Pointer Educare. Swagata is Subhada's sister, while Sudipta is Subhada's student. 🌸`,
-    swagatadi_soumyadip: `Swagata (Swagatadi) and Soumyadip are both core members of the management group associated with Pointer Educare. Swagata is Subhada's sister, while Soumyadip is Subhada's student. 🌸`,
-    sudipta_soumyadip: `Sudipta Halder and Soumyadip are both students of Subhabrata Bhattacharjee (Subhada) and core members of the management group. Sudipta is also an Assistant Professor at Regent College. 🌸`,
-    everyone: `Subhada (Subhabrata Bhattacharjee) is the central figure. Swagata (Swagatadi) is his sister. Sudipta Halder and Soumyadip are both his students. All four are from Bally and are associated with the management/activities around Pointer Educare. 🌸`
-  },
-  bally: `Bally is located in Howrah district, West Bengal. Subhada, Swagata, Sudipta and Soumyadip are all from Bally. 📍`,
-  attendance: `The attendance eligibility hasn't been specified here. Please contact one of the organisers to confirm. 😊`,
-  welcome: `Welcome to Subhada's Teachers' Day Celebration! 🌸
+  bally: `Yes, the venue is in Bally, Howrah, West Bengal. The PIN code is 711227. 📍`,
+  welcome: `Welcome to Subhada's Teachers' Day Celebration! 🌸\n\nWe're putting together a warm, homely celebration and would love to have everyone be a part of it. Ask me anything about the day!`
+};
 
-We're putting together a warm, homely celebration and would love to have everyone be a part of it. Ask me anything about the day!`
+answers.relations = {
+  subhada_swagata: `Swagata (Swagatadi) is the sister of Subhabrata Bhattacharjee (Subhada). She is also a core member of the management team associated with Pointer Educare. 🌸`,
+  subhada_sudipta: `Sudipta Halder is a student of Subhabrata Bhattacharjee (Subhada). He is also an Assistant Professor at Regent College and a core member of the management group. 🌸`,
+  subhada_soumyadip: `Soumyadip is a student of Subhabrata Bhattacharjee (Subhada) and a core member of Pointer Educare and the management group. 🌸`,
+  swagatadi_sudipta: `Swagata (Swagatadi) and Sudipta Halder are both core members of the management group associated with Pointer Educare. Swagata is Subhada's sister, while Sudipta is Subhada's student. 🌸`,
+  swagatadi_soumyadip: `Swagata (Swagatadi) and Soumyadip are both core members of the management group associated with Pointer Educare. Swagata is Subhada's sister, while Soumyadip is Subhada's student. 🌸`,
+  sudipta_soumyadip: `Sudipta Halder and Soumyadip are both students of Subhabrata Bhattacharjee (Subhada) and core members of the management group. Sudipta is also an Assistant Professor at Regent College. 🌸`,
+  everyone: `Subhada (Subhabrata Bhattacharjee) is the central figure. Swagata (Swagatadi) is his sister. Sudipta Halder and Soumyadip are his students. All four are from Bally and are associated with the management/activities around Pointer Educare. 🌸`
 };
 
 const labels = {
@@ -231,114 +261,160 @@ function add(text, who='bot'){
   row.className='msg '+who;
   const b=document.createElement('div');
   b.className='bubble';
-  b.textContent=text;
+  const value=String(text);
+  if(value.includes(FORM_URL)){
+    const parts=value.split(FORM_URL);
+    parts.forEach((part,i)=>{
+      if(part) b.appendChild(document.createTextNode(part));
+      if(i<parts.length-1){
+        const a=document.createElement('a');
+        a.href=FORM_URL;
+        a.target='_blank';
+        a.rel='noopener noreferrer';
+        a.textContent='Open Google Form';
+        a.style.fontWeight='600';
+        b.appendChild(a);
+      }
+    });
+  }else{
+    b.textContent=value;
+  }
   row.appendChild(b);
   box.appendChild(row);
   box.scrollTop=box.scrollHeight;
 }
 
 function findAnswer(question){
-  // v10: robust conversational intent handling. Normalize spelling/punctuation first.
   const q=String(question||'').toLowerCase()
     .replace(/[?!.:,;()\[\]{}]/g,' ')
     .replace(/\s+/g,' ')
     .trim();
 
-  const hasAny = (...terms) => terms.some(term => q.includes(term));
-  const subhadaNames = ['subhabrata','subhada','subhoda','subho','subha da','subha-da'];
-  const swagataNames = ['swagata','swagatadi','swagata di','swagata-di'];
-  const sudiptaNames = ['sudipta','sudipto'];
-  const soumyadipNames = ['soumyadip','soumodip','soumyadeep'];
-  const hasSubhada = hasAny(...subhadaNames);
-  const hasSwagata = hasAny(...swagataNames);
-  const hasSudipta = hasAny(...sudiptaNames);
-  const hasSoumyadip = hasAny(...soumyadipNames);
+  const has = (...terms) => terms.some(t => q.includes(t));
+  const word = (...terms) => terms.some(t => new RegExp('\\b'+t.replace(/[.*+?^${}()|[\\]\\\\]/g,'\\$&')+'\\b').test(q));
 
-  // Relationship intent. If two known people are named together with a relationship
-  // question, answer their relationship before profile matching.
-  const relationshipWords = [
-    'relationship','relation','related','relate','how is','how are',
-    'who is','what is the relation','what is the relationship',
-    'who is she to','who is he to','who is this to','to whom'
-  ];
-  const asksRelation = relationshipWords.some(term => q.includes(term));
-
-  // Explicit pair checks are intentionally independent of exact sentence wording.
-  if (asksRelation || (hasSwagata && hasSudipta) || (hasSwagata && hasSoumyadip) ||
-      (hasSudipta && hasSoumyadip) || (hasSubhada && (hasSwagata || hasSudipta || hasSoumyadip))) {
-    if (hasSwagata && hasSubhada)
-      return answers.relations.subhada_swagata;
-
-    if (hasSudipta && hasSubhada)
-      return answers.relations.subhada_sudipta;
-
-    if (hasSoumyadip && hasSubhada)
-      return answers.relations.subhada_soumyadip;
-
-    if (hasSwagata && hasSudipta)
-      return answers.relations.swagatadi_sudipta;
-
-    if (hasSwagata && hasSoumyadip)
-      return answers.relations.swagatadi_soumyadip;
-
-    if (hasSudipta && hasSoumyadip)
-      return answers.relations.sudipta_soumyadip;
-
-    if (hasAny('all','everyone','four','each other'))
-      return answers.relations.everyone;
-  }
-
-  // Bot identity: specifically about the Teachers' Day Celebration.
-  if (
-    q === 'who are you' || q === 'who r you' || q === 'what are you' ||
-    q.includes('tell me about yourself') || q.includes('tell me about you') ||
-    q.includes('what is your name') || q.includes('are you a chatbot') ||
-    q.includes('are you a bot') || q.includes('what do you do')
-  )
-    return `I'm Subhada's Celebration Buddy! 😊 I'm a virtual assistant created especially to help you with information about Subhada's Teachers' Day Celebration. You can ask me about the celebration, venue, timings, registration, activities, rules, or anything else related to the event. 🎉`;
-
-  // Name aliases: all of these refer to Subhabrata Bhattacharjee.
-  if (hasSubhada || q.includes('subha')) return answers.subhada;
-
-  if (hasSwagata) return answers.swagatadi;
-  if (hasSudipta) return answers.sudipta;
-  if (hasSoumyadip) return answers.soumyadip;
-
-  if (q.includes('bally') || q.includes('where is bally') || q.includes('where is bali'))
-    return answers.bally;
-
-  // Thank-you messages
-  if (
-    q.includes('thanks') || q.includes('thank you') || q.includes('thank u') ||
-    q.includes('thx') || q.includes('many thanks') || q.includes('thanks a lot') ||
-    q.includes('thank you so much')
-  )
+  // Short conversational replies
+  if (/^(okay|ok|alright|sure|got it|understood|fine|great|nice|good|done|oh|oh okay|okay thanks|ok thanks)$/.test(q))
+    return `You're welcome! 😊 If you have any other questions about the celebration, feel free to ask. 🌸`;
+  if (has('thanks','thank you','thank u','thx','many thanks','thanks a lot','thank you so much'))
     return `You're most welcome! 😊🌸 Looking forward to having you at the celebration!`;
 
-  if (q.includes('participate') || q.includes('participation') || q.includes('can i perform') ||
-      q.includes('perform in') || q.includes('perform at') || q.includes('take part') ||
-      q.includes('can i come') || q.includes('can i attend') || q.includes('can i be there') ||
-      q.includes('can i join') || q.includes('am i allowed to attend'))
-    return answers.attendance;
+  // Bot identity
+  if (q === 'who are you' || q === 'who r you' || q === 'what are you' ||
+      has('tell me about yourself','tell me about you','what is your name','are you a chatbot','are you a bot','what do you do'))
+    return `I'm Subhada's Celebration Buddy! 😊 I'm a virtual assistant created especially to help you with information about Subhada's Teachers' Day Celebration. You can ask me about the celebration, venue, timings, registration, activities, rules, or anything else related to the event. 🎉`;
 
-  if (q.includes('event') || q.includes('celebration') || q.includes("teachers' day") ||
-      q.includes('teachers day') || q.includes('teacher day') || q.includes('what is this about') ||
-      q.includes('tell me about the event') || q.includes('tell me about it') ||
-      q.includes('what is happening on sunday') || q.includes("what's happening on sunday"))
-    return answers.event;
+  // Known people and relationships
+  const subhadaNames=['subhabrata','subhada','subhoda','subho','subha da','subha-da'];
+  const swagataNames=['swagata','swagatadi','swagata di','swagata-di'];
+  const sudiptaNames=['sudipta','sudipto'];
+  const soumyadipNames=['soumyadip','soumodip','soumyadeep'];
+  const hasSubhada=has(...subhadaNames), hasSwagata=has(...swagataNames), hasSudipta=has(...sudiptaNames), hasSoumyadip=has(...soumyadipNames);
+  const relation=has('relationship','relation','related','relate','how is','how are','what is the relation','what is the relationship','who is she to','who is he to','who is this to','to whom');
+  if (relation || (hasSubhada && (hasSwagata||hasSudipta||hasSoumyadip)) || (hasSwagata&&hasSudipta) || (hasSwagata&&hasSoumyadip) || (hasSudipta&&hasSoumyadip)) {
+    if(hasSubhada&&hasSwagata) return answers.relations.subhada_swagata;
+    if(hasSubhada&&hasSudipta) return answers.relations.subhada_sudipta;
+    if(hasSubhada&&hasSoumyadip) return answers.relations.subhada_soumyadip;
+    if(hasSwagata&&hasSudipta) return answers.relations.swagatadi_sudipta;
+    if(hasSwagata&&hasSoumyadip) return answers.relations.swagatadi_soumyadip;
+    if(hasSudipta&&hasSoumyadip) return answers.relations.sudipta_soumyadip;
+    if(has('all','everyone','four','each other')) return answers.relations.everyone;
+  }
+  if(hasSubhada || has('subha')) return answers.subhada;
+  if(hasSwagata) return answers.swagatadi;
+  if(hasSudipta) return answers.sudipta;
+  if(hasSoumyadip) return answers.soumyadip;
 
-  // Friendly greetings
-  if (
-    /^(hi|hello|hey|hiya|hii|hiii)([!,. ]|$)/.test(q) ||
-    q.includes('hi there') || q.includes('hello there') ||
-    q.includes('good morning') || q.includes('good afternoon') ||
-    q.includes('good evening') || q.includes('good night') ||
-    q.includes('how are you') || q.includes('how r you')
-  )
+  // Date and event timing
+  if(has('when is the celebration','when is the event','which day','what date','date of the celebration','when is teachers day celebration','when is the teachers day celebration')) return answers.date;
+  if(has('what time does it start','what time will it start','when does it start','what time is the start','start time','what time is the programme','what time is the program','what time does the programme start','what time does the program start')) return answers.arrival;
+  if(has('what time does it end','when does it end','what time will it end','end time','what time is the ending')) return `The programme is planned to continue until around 6 PM. 😊 The exact flow may change slightly during the day.`;
+  if(has('how long will the program be','how long will the programme be','how long is the program','how long is the programme','how long will the celebration be','duration of the program','duration of the programme')) return `The programme is planned from around 11 AM to 6 PM. 😊 The exact flow may change slightly during the day.`;
+  if(has('what are the timings','what is the timing','event timing','program timing','programme timing','celebration timing','11 am to 6 pm','11am to 6pm','11 to 6','between 11 and 6','from 11 am to 6 pm','from 11am to 6pm','whole day','entire day')) return answers.timing;
+
+  // Arrival / departure. Check after-6 cases before generic late-arrival cases.
+  if(word('come','arrive','reach','join') && has('after 6','after 7','after 8','at 7 pm','at 7pm','at 8 pm','at 8pm','by 7 pm','by 7pm','by 8 pm','by 8pm','after the event ends')) return answers.afterSixArrival;
+  if(has('when should i come','when should we come','when can i come','when can we come','when should i arrive','when can i arrive','what is the arrival time','arrival time','what time should i come','what time should we come','what time should i arrive','what time can i arrive','do i have to come at 11','do we have to come at 11','is 11 am compulsory','is 11am compulsory','mandatory to come at 11','mandatory to be there from 11')) return answers.arrival;
+  if(word('come','arrive','reach','join') && has('after','late','later','pm','afternoon','at 12','at 1','at 2','at 3','at 4','at 5')) return answers.arrivalLate;
+  if(word('leave','depart','go home') && has('after 6','after 7','after 8','at 7 pm','at 7pm','at 8 pm','at 8pm','by 7 pm','by 7pm','by 8 pm','by 8pm','after the programme','after the program','after the event ends')) return answers.afterSixLeaving;
+  if(word('leave','depart','go home') && has('before 6','by 6','at 6','before 5','by 5','at 5','early','anytime','any time','till 6','until 6','pm','when can i go','when can we go','when should i leave','when should we leave')) return answers.leaving;
+  if(has('stay from 11 to 6','stay till 6','stay until 6','do i have to stay','do we have to stay','stay the whole day')) return answers.leaving;
+
+  // Venue, address, location, directions and parking.
+  if(has('what is the address','address of the venue','venue address','full address','where is subhada','where is shubhada','where is subhada residence','where is shubhada residence','where is the residence')) return answers.venue;
+  if(has('how do i reach','how can i reach','how to reach','how do we reach','how do i get there','how can i get there','directions to the venue','how to get to the venue')) return answers.reach;
+  if(has('is it in bally','is the venue in bally','where is bally')) return answers.bally;
+  if(has('pin code','pincode','postal code')) return `The PIN code is 711227. 📍`;
+  if(has('landmark','nearby landmark','give me a landmark')) return answers.landmark;
+  if(has('is it easy to find','easy to find','will i find the venue','difficult to find')) return `Yes, the venue should be easy to find. 😊 If you have any difficulty locating it, please contact an organiser for guidance.`;
+  if(has('parking available','is there parking','parking')) return answers.parking;
+  if(has('where can i park','where do i park','two wheeler parking','bike parking','scooter parking')) return answers.bikeParking;
+  if(has('car parking','four wheeler parking','4 wheeler parking','where can i park my car')) return answers.carParking;
+
+  // Dress code. Word-boundary matching avoids treating "address" as "dress".
+  if(has('dress code','what can i wear','what should i wear','what to wear','what do i wear','what can we wear','what should we wear','what should i put on','what should i dress','attire','outfit','clothes','clothing','wear for the celebration','wear to the celebration','can i wear','can we wear') || word('dress')) return answers.dress;
+
+  // Cultural programme and performance questions come before general attendance/registration.
+  if(has('will there be a cultural program','will there be a cultural programme','cultural program','cultural programme')) return answers.cultural;
+  if(has('can i perform','can we perform','perform at the celebration','perform in the program','perform in the programme')) return answers.performance;
+  if(has('what kind of performance','what performances','what can i perform','which performances','types of performance')) return answers.performanceTypes;
+  if(has('can i sing','singing')) return answers.sing;
+  if(has('can i dance','dancing')) return answers.dance;
+  if(has('can i recite','recite a poem','poem')) return answers.poem;
+  if(has('participate with a group','group performance','perform as a group')) return answers.groupPerformance;
+  if(has('register for a performance','performance registration','do i need to register for a performance')) return answers.performanceRegistration;
+
+  // Quiz questions
+  if(has('what kind of questions','what type of questions','different type of question','different types of questions','what questions will be asked','what questions will they ask','quiz questions','what is the quiz about')) return answers.quizQuestions;
+  if(has('will the question be difficult','will the questions be difficult','is the quiz difficult','are the questions difficult','difficult quiz')) return answers.quizDifficulty;
+  if(has('is the quiz for fun','quiz for fun','is it just for fun','only for fun')) return `Yes, the quiz is only for fun. 😊`;
+  if(has('will there be prizes','quiz prizes','are there prizes','prize')) return answers.quizPrize;
+  if(has('who can participate in the quiz','can anyone participate in the quiz','can i participate in the quiz','can we participate in the quiz')) return `Anyone attending the programme can participate in the quiz. 😊`;
+  if(has('do i need to prepare for the quiz','should i prepare for the quiz','need to prepare for quiz')) return `You may prepare if you want, but it is not required. 😊 The quiz is only for fun.`;
+  if(has('will there be a quiz','will there be quiz','quiz')) return answers.quiz;
+
+  // Attendance and guests
+  if(has('who can attend','who can come')) return answers.attendance;
+  if(has('can ex student','can ex-student','can ex students','can ex-students','former student','former students','ex student','ex-student')) return answers.exStudent;
+  if(has('can current student','can current students','current student','current students')) return answers.currentStudent;
+  if(has('can i bring my friend','can i bring a friend','can i bring someone','bring someone','bring a friend','bring my friend','bring another person','bring anyone','bring someone with me','can my friend come')) return answers.guest;
+  if(has('can i bring my family','can i bring family','can my family come','family member','brother','sister','can my brother','can my sister')) return answers.family;
+  if(has('guest','bring a guest','can i bring a guest')) return answers.guest;
+  if(has('i have not filled the form','haven’t filled the form','havent filled the form','did not fill the form','didn’t fill the form','didnt fill the form','not filled the form')) return answers.formNotFilled;
+  if(has('deadline for the form','last date for the form','when should i fill the form','when do i fill the form','fill it by when','form deadline')) return answers.formDeadline;
+  if(has('google form','registration form','registration','register','fill the form','filled the form','submit the form','submitted the form','form link','registration link')) return answers.form;
+  if(has('can i participate in the contest','can i participate in contest','contest','competition')) return answers.contest;
+  if(has('can i attend','can we attend','am i allowed to attend','am i allowed to come')) return answers.attendance;
+
+  // Food
+  if(has('will there be lunch','is lunch provided','will lunch be provided','lunch provided','food included','is food included')) return answers.food;
+  if(has('what time is lunch','when is lunch','when will lunch','lunch time','what time will lunch')) return answers.lunch;
+  if(has('will there be cake','is there cake','cake cutting','cake')) return answers.cake;
+  if(has('are snacks available','will there be snacks','snacks available','snacks')) return answers.snacks;
+  if(has('bring my own food','bring outside food','outside food','own food')) return answers.ownFood;
+
+  // Rules / practical items
+  if(has('will alcohol be allowed','is alcohol allowed','can i drink alcohol','alcohol')) return answers.alcohol;
+  if(has('are there any rules','rules for the celebration','any rules','what are the rules')) return answers.rules;
+  if(has('what should i keep in mind','anything i should keep in mind','anything to keep in mind','what should i remember','what do i need to keep in mind')) return answers.keepInMind;
+  if(has('can i smoke','smoking')) return answers.smoking;
+  if(has('can i bring a gift','gift for subhada','gift for shubhada','bring a gift')) return answers.gift;
+  if(has('should i bring anything','what should i bring','what do i need to bring','what to bring','bring anything')) return answers.bring;
+
+  // Programme overview
+  if(has('what should i expect','what can i expect','what to expect','what will happen at the celebration','what is planned for the day')) return answers.expectation;
+  if(has('what happens during the program','what happens during the programme','what happens in the program','what happens in the programme','what will happen during the celebration')) return answers.program;
+  if(has('short speech','will there be a speech','subhada speech','speech')) return answers.speech;
+  if(has('success stories','student success')) return answers.success;
+  if(has('what is the celebration','what is this about','tell me about the event','tell me about the celebration','what is happening on sunday','what is the event','what is the program','what is the programme','celebration')) return answers.event;
+
+  // Greetings
+  if (/^(hi|hello|hey|hiya|hii|hiii)([!,. ]|$)/.test(q) || has('hi there','hello there','good morning','good afternoon','good evening','good night','how are you','how r you'))
     return `Hello! 👋🌸 I'm here to help with Subhada's Teachers' Day Celebration. Ask me anything about the event! 😊`;
 
   return `I'm not sure about that one. 😊 Please contact one of the organisers for confirmation.`;
 }
+
 function quick(type){
   add(labels[type],'user');
   setTimeout(()=>add(answers[type]),120);
