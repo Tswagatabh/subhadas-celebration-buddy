@@ -1,4 +1,4 @@
-<!-- Subhada Celebration Buddy v9: celebration-focused identity + relationship-aware layer -->
+<!-- Subhada Celebration Buddy v10: integrated conversational relationship engine -->
 <!-- Subhada Celebration Buddy v7: conversational alias/intent layer -->
 <!DOCTYPE html>
 <html lang="en">
@@ -238,62 +238,71 @@ function add(text, who='bot'){
 }
 
 function findAnswer(question){
-  const q=question.toLowerCase().trim();
+  // v10: robust conversational intent handling. Normalize spelling/punctuation first.
+  const q=String(question||'').toLowerCase()
+    .replace(/[?!.:,;()\[\]{}]/g,' ')
+    .replace(/\s+/g,' ')
+    .trim();
 
-  // Relationship questions: check these BEFORE person-profile matching.
   const hasAny = (...terms) => terms.some(term => q.includes(term));
-  const asksRelation = hasAny(
-    'relationship', 'relation', 'related', 'how is', 'how are', 'what is the relation',
-    'what is the relationship', 'who is.*to', 'to subhada', 'to subho', 'to subha'
-  );
+  const subhadaNames = ['subhabrata','subhada','subhoda','subho','subha da','subha-da'];
+  const swagataNames = ['swagata','swagatadi','swagata di','swagata-di'];
+  const sudiptaNames = ['sudipta','sudipto'];
+  const soumyadipNames = ['soumyadip','soumodip','soumyadeep'];
+  const hasSubhada = hasAny(...subhadaNames);
+  const hasSwagata = hasAny(...swagataNames);
+  const hasSudipta = hasAny(...sudiptaNames);
+  const hasSoumyadip = hasAny(...soumyadipNames);
 
-  if (asksRelation) {
-    if (hasAny('swagata','swagatadi','swagata di') && hasAny('subhada','subhoda','subho','subha','subhabrata'))
+  // Relationship intent. If two known people are named together with a relationship
+  // question, answer their relationship before profile matching.
+  const relationshipWords = [
+    'relationship','relation','related','relate','how is','how are',
+    'who is','what is the relation','what is the relationship',
+    'who is she to','who is he to','who is this to','to whom'
+  ];
+  const asksRelation = relationshipWords.some(term => q.includes(term));
+
+  // Explicit pair checks are intentionally independent of exact sentence wording.
+  if (asksRelation || (hasSwagata && hasSudipta) || (hasSwagata && hasSoumyadip) ||
+      (hasSudipta && hasSoumyadip) || (hasSubhada && (hasSwagata || hasSudipta || hasSoumyadip))) {
+    if (hasSwagata && hasSubhada)
       return answers.relations.subhada_swagata;
 
-    if (hasAny('sudipta','sudipto') && hasAny('subhada','subhoda','subho','subha','subhabrata'))
+    if (hasSudipta && hasSubhada)
       return answers.relations.subhada_sudipta;
 
-    if (hasAny('soumyadip','soumodip','soumyadeep') && hasAny('subhada','subhoda','subho','subha','subhabrata'))
+    if (hasSoumyadip && hasSubhada)
       return answers.relations.subhada_soumyadip;
 
-    if (hasAny('swagata','swagatadi','swagata di') && hasAny('sudipta','sudipto'))
+    if (hasSwagata && hasSudipta)
       return answers.relations.swagatadi_sudipta;
 
-    if (hasAny('swagata','swagatadi','swagata di') && hasAny('soumyadip','soumodip','soumyadeep'))
+    if (hasSwagata && hasSoumyadip)
       return answers.relations.swagatadi_soumyadip;
 
-    if (hasAny('sudipta','sudipto') && hasAny('soumyadip','soumodip','soumyadeep'))
+    if (hasSudipta && hasSoumyadip)
       return answers.relations.sudipta_soumyadip;
 
     if (hasAny('all','everyone','four','each other'))
       return answers.relations.everyone;
   }
 
-  // Bot identity: keep the assistant focused specifically on the Teachers' Day Celebration.
+  // Bot identity: specifically about the Teachers' Day Celebration.
   if (
-    q === 'who are you' || q === 'what are you' || q === 'who r you' ||
+    q === 'who are you' || q === 'who r you' || q === 'what are you' ||
     q.includes('tell me about yourself') || q.includes('tell me about you') ||
     q.includes('what is your name') || q.includes('are you a chatbot') ||
     q.includes('are you a bot') || q.includes('what do you do')
   )
     return `I'm Subhada's Celebration Buddy! 😊 I'm a virtual assistant created especially to help you with information about Subhada's Teachers' Day Celebration. You can ask me about the celebration, venue, timings, registration, activities, rules, or anything else related to the event. 🎉`;
 
-  // Name aliases: Subhada, Subhoda, Subho, Subha and Subha Da all refer to Subhabrata Bhattacharjee.
-  if (q.includes('subhabrata') || q.includes('subhada') || q.includes('subhoda') ||
-      q.includes('subho') || q.includes('subha da') || q.includes('subha-da') ||
-      q.includes('subha') || q.includes('subhada da'))
-    return answers.subhada;
+  // Name aliases: all of these refer to Subhabrata Bhattacharjee.
+  if (hasSubhada || q.includes('subha')) return answers.subhada;
 
-  if (q.includes('swagatadi') || q.includes('swagata') || q.includes('swagata di') ||
-      q.includes('swagata-di'))
-    return answers.swagatadi;
-
-  if (q.includes('sudipta') || q.includes('sudipto'))
-    return answers.sudipta;
-
-  if (q.includes('soumyadip') || q.includes('soumodip') || q.includes('soumyadeep'))
-    return answers.soumyadip;
+  if (hasSwagata) return answers.swagatadi;
+  if (hasSudipta) return answers.sudipta;
+  if (hasSoumyadip) return answers.soumyadip;
 
   if (q.includes('bally') || q.includes('where is bally') || q.includes('where is bali'))
     return answers.bally;
@@ -308,95 +317,6 @@ function findAnswer(question){
 
   if (q.includes('participate') || q.includes('participation') || q.includes('can i perform') ||
       q.includes('perform in') || q.includes('perform at') || q.includes('take part') ||
-      q.includes('join the programme') || q.includes('join the program')) {
-    if (q.includes('not a student') || q.includes('non-student') || q.includes('non student') ||
-        q.includes('not student') || q.includes("i'm not a student") || q.includes('i am not a student'))
-      return answers.nonstudent;
-    if (q.includes('student') || q.includes('ex-student') || q.includes('ex student') ||
-        q.includes('former student') || q.includes('old student') || q.includes('previous student'))
-      return answers.participation;
-    return `Participation in the cultural programme is limited to students and ex-students. 😊`;
-  }
-
-  if (q.includes('dress') || q.includes('wear') || q.includes('clothes') || q.includes('outfit') ||
-      q.includes('what should i wear') || q.includes('what to wear') || q.includes('dress code') ||
-      q.includes('ethnic') || q.includes('casual'))
-    return answers.dress;
-
-  if (q.includes('quiz') || q.includes('prize') || q.includes('game') || q.includes('games') ||
-      q.includes('trivia') || q.includes('question') || q.includes('win something') ||
-      q.includes('win a prize') || q.includes('anything to win'))
-    return answers.quiz;
-
-  if (q.includes('cake') || q.includes('cake cutting') || q.includes('cut the cake') ||
-      q.includes('cutting ceremony'))
-    return answers.cake;
-
-  if (q.includes('lunch') || q.includes('food') || q.includes('eat') || q.includes('meal') ||
-      q.includes('eating') || q.includes('have lunch') || q.includes('lunch included') ||
-      q.includes('food included'))
-    return answers.food;
-
-  if (q.includes('speech') || q.includes('subhada speak') || q.includes('subhada say') ||
-      q.includes('who speaks first') || q.includes('who will speak first') ||
-      q.includes('opening speech') || q.includes('start with a speech'))
-    return answers.speech;
-
-  if (q.includes('success stor') || q.includes('student success') || q.includes('achievement') ||
-      q.includes('success') || q.includes('stories from students'))
-    return answers.success;
-
-  if (q.includes('cultural') || q.includes('programme') || q.includes('program') ||
-      q.includes('performance') || q.includes('performances') || q.includes('cultural show') ||
-      q.includes('cultural event'))
-    return answers.cultural;
-
-  if (q.includes('address') || q.includes('where') || q.includes('venue') || q.includes('location') ||
-      q.includes('residency') || q.includes('place') || q.includes('full address') ||
-      q.includes('where is it') || q.includes('where is the celebration'))
-    return answers.venue;
-
-  if (q.includes('direction') || q.includes('transport') || q.includes('parking') ||
-      q.includes('landmark') || q.includes('map') || q.includes('how do i get') ||
-      q.includes('how to reach') || q.includes('how can i reach') || q.includes('reach the venue') ||
-      q.includes('get there') || q.includes('travel') || q.includes('route'))
-    return answers.venue;
-
-  if (q.includes('contact') || q.includes('phone') || q.includes('number') ||
-      q.includes('organiser') || q.includes('organizer') || q.includes('who should i call') ||
-      q.includes('whom should i contact') || q.includes('contact number') ||
-      q.includes('phone number') || q.includes('call someone') || q.includes('who can i contact'))
-    return answers.contact;
-
-  if (q.includes('date') || q.includes('which day') || q.includes('what day') ||
-      q.includes('when is the celebration') || q.includes('when is it') ||
-      q.includes('which date') || q.includes('what date'))
-    return answers.date;
-
-  if (q.includes('time') || q.includes('what time') || q.includes('start') || q.includes('starts') ||
-      q.includes('begin') || q.includes('begins') || q.includes('end') || q.includes('ends') ||
-      q.includes('finish') || q.includes('finishes') || q.includes('how long') ||
-      q.includes('duration') || q.includes('how many hours'))
-    return answers.timing;
-
-  if (q.includes('schedule') || q.includes('plan') || q.includes('what will happen') ||
-      q.includes('what is planned') || q.includes('what are we doing') ||
-      q.includes('what is the programme') || q.includes('what is the program') ||
-      q.includes('day look like') || q.includes('plan for the day') ||
-      q.includes('what happens before lunch') || q.includes('before lunch'))
-    return answers.schedule;
-
-  if (q.includes('alcohol') || q.includes('liquor') || q.includes('drink') ||
-      q.includes('drinks') || q.includes('wine') || q.includes('beer') || q.includes('alcoholic'))
-    return answers.alcohol;
-
-  if (q.includes('decent') || q.includes('behavior') || q.includes('behaviour') ||
-      q.includes('conduct') || q.includes('rules') || q.includes('respect') ||
-      q.includes('appropriate') || q.includes('what are the rules') || q.includes('any rules') ||
-      q.includes('how should we behave'))
-    return answers.conduct;
-
-  if (q.includes('attend') || q.includes('come') || q.includes('join') ||
       q.includes('can i come') || q.includes('can i attend') || q.includes('can i be there') ||
       q.includes('can i join') || q.includes('am i allowed to attend'))
     return answers.attendance;
