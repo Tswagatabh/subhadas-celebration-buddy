@@ -341,7 +341,17 @@ function findAnswer(question){
   if(has('stay from 11 to 6','stay till 6','stay until 6','do i have to stay','do we have to stay','stay the whole day')) return answers.leaving;
 
   // Venue, address, location, directions and parking.
-  if(has('what is the address','address of the venue','venue address','full address','where is subhada','where is shubhada','where is subhada residence','where is shubhada residence','where is the residence')) return answers.venue;
+  // Keep address matching separate from dress-code matching so 'address' is never mistaken for 'dress'.
+  if(q === 'address' || q === 'adress' || q === 'venue' || q === 'location' ||
+     has('what is the address','what is address','what is the venue address','what is the full address',
+         'address of the venue','address of subhada','address of shubhada','venue address','full address',
+         'where is the venue','where is the celebration','where is the event','where is the program',
+         'where is the programme','where is it being held','where is it held','where is the celebration held',
+         'where is the event held','where is subhada','where is shubhada','where is subhada residence',
+         'where is shubhada residence','where is the residence','what is the location','what is the venue location',
+         'venue location','celebration location','event location','place of the celebration','place of the event',
+         'where should i come','where should we come','where do i have to come','where do we have to come'))
+    return answers.venue;
   if(has('how do i reach','how can i reach','how to reach','how do we reach','how do i get there','how can i get there','directions to the venue','how to get to the venue')) return answers.reach;
   if(has('is it in bally','is the venue in bally','where is bally')) return answers.bally;
   if(has('pin code','pincode','postal code')) return `The PIN code is 711227. 📍`;
@@ -401,7 +411,9 @@ function findAnswer(question){
   if(has('can i bring a gift','gift for subhada','gift for shubhada','bring a gift')) return answers.gift;
   if(has('should i bring anything','what should i bring','what do i need to bring','what to bring','bring anything')) return answers.bring;
 
-  // Programme overview
+  // Programme overview / plan / agenda
+  // These cover natural questions such as "What is the plan?", "What's happening?" and "What is the agenda?"
+  if(has('what is the plan','whats the plan','what's the plan','what is the programme plan','what is the program plan','what is planned','what has been planned','what are the plans','what is the agenda','whats the agenda','what's the agenda','what is on the agenda','what is happening','whats happening','what's happening','what will we do','what are we doing','what is going to happen','what is the schedule for the day','day plan','plan for the day','programme plan','program plan','programme schedule','program schedule','event plan','event schedule','lineup','line up')) return answers.program;
   if(has('what should i expect','what can i expect','what to expect','what will happen at the celebration','what is planned for the day')) return answers.expectation;
   if(has('what happens during the program','what happens during the programme','what happens in the program','what happens in the programme','what will happen during the celebration')) return answers.program;
   if(has('short speech','will there be a speech','subhada speech','speech')) return answers.speech;
