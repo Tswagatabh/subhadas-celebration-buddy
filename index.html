@@ -175,67 +175,111 @@ function add(text, who='bot'){
 function findAnswer(question){
   const q=question.toLowerCase().trim();
 
-  // Participation questions first, so "perform/participate" isn't mistaken for a general programme question.
-  if (q.includes('participate') || q.includes('participation') || q.includes('can i perform') || q.includes('perform in') || q.includes('perform at')) {
-    if (q.includes('not a student') || q.includes('non-student') || q.includes('not student') || q.includes('not a student')) {
+  if (q.includes('participate') || q.includes('participation') || q.includes('can i perform') ||
+      q.includes('perform in') || q.includes('perform at') || q.includes('take part') ||
+      q.includes('join the programme') || q.includes('join the program')) {
+    if (q.includes('not a student') || q.includes('non-student') || q.includes('non student') ||
+        q.includes('not student') || q.includes("i'm not a student") || q.includes('i am not a student'))
       return answers.nonstudent;
-    }
-    if (q.includes('student') || q.includes('ex-student') || q.includes('ex student') || q.includes('former student')) {
+    if (q.includes('student') || q.includes('ex-student') || q.includes('ex student') ||
+        q.includes('former student') || q.includes('old student') || q.includes('previous student'))
       return answers.participation;
-    }
     return `Participation in the cultural programme is limited to students and ex-students. 😊`;
   }
 
-  if (q.includes('dress') || q.includes('wear') || q.includes('clothes') || q.includes('outfit') || q.includes('what should i wear') || q.includes('what to wear'))
+  if (q.includes('dress') || q.includes('wear') || q.includes('clothes') || q.includes('outfit') ||
+      q.includes('what should i wear') || q.includes('what to wear') || q.includes('dress code') ||
+      q.includes('ethnic') || q.includes('casual'))
     return answers.dress;
 
-  if (q.includes('quiz') || q.includes('prize') || q.includes('game') || q.includes('question'))
+  if (q.includes('quiz') || q.includes('prize') || q.includes('game') || q.includes('games') ||
+      q.includes('trivia') || q.includes('question') || q.includes('win something') ||
+      q.includes('win a prize') || q.includes('anything to win'))
     return answers.quiz;
 
-  if (q.includes('cake') || q.includes('cutting'))
+  if (q.includes('cake') || q.includes('cake cutting') || q.includes('cut the cake') ||
+      q.includes('cutting ceremony'))
     return answers.cake;
 
-  if (q.includes('lunch') || q.includes('food') || q.includes('eat') || q.includes('meal'))
+  if (q.includes('lunch') || q.includes('food') || q.includes('eat') || q.includes('meal') ||
+      q.includes('eating') || q.includes('have lunch') || q.includes('lunch included') ||
+      q.includes('food included'))
     return answers.food;
 
-  if (q.includes('speech') || q.includes('subhada speak') || q.includes('subhada say'))
+  if (q.includes('speech') || q.includes('subhada speak') || q.includes('subhada say') ||
+      q.includes('who speaks first') || q.includes('who will speak first') ||
+      q.includes('opening speech') || q.includes('start with a speech'))
     return answers.speech;
 
-  if (q.includes('success stor') || q.includes('student success') || q.includes('achievement'))
+  if (q.includes('success stor') || q.includes('student success') || q.includes('achievement') ||
+      q.includes('success') || q.includes('stories from students'))
     return answers.success;
 
-  if (q.includes('cultural') || q.includes('programme') || q.includes('program') || q.includes('performance') || q.includes('performances'))
+  if (q.includes('cultural') || q.includes('programme') || q.includes('program') ||
+      q.includes('performance') || q.includes('performances') || q.includes('cultural show') ||
+      q.includes('cultural event'))
     return answers.cultural;
 
-  if (q.includes('address') || q.includes('where') || q.includes('venue') || q.includes('location') || q.includes('residency') || q.includes('place'))
+  if (q.includes('address') || q.includes('where') || q.includes('venue') || q.includes('location') ||
+      q.includes('residency') || q.includes('place') || q.includes('full address') ||
+      q.includes('where is it') || q.includes('where is the celebration'))
     return answers.venue;
 
-  if (q.includes('direction') || q.includes('transport') || q.includes('parking') || q.includes('landmark') || q.includes('map') || q.includes('how do i get') || q.includes('how to reach'))
+  if (q.includes('direction') || q.includes('transport') || q.includes('parking') ||
+      q.includes('landmark') || q.includes('map') || q.includes('how do i get') ||
+      q.includes('how to reach') || q.includes('how can i reach') || q.includes('reach the venue') ||
+      q.includes('get there') || q.includes('travel') || q.includes('route'))
     return answers.venue;
 
-  if (q.includes('contact') || q.includes('phone') || q.includes('number') || q.includes('organiser') || q.includes('organizer') || q.includes('who should i call') || q.includes('whom should i contact'))
+  if (q.includes('contact') || q.includes('phone') || q.includes('number') ||
+      q.includes('organiser') || q.includes('organizer') || q.includes('who should i call') ||
+      q.includes('whom should i contact') || q.includes('contact number') ||
+      q.includes('phone number') || q.includes('call someone') || q.includes('who can i contact'))
     return answers.contact;
 
-  if (q.includes('date') || q.includes('which day') || q.includes('what day'))
+  if (q.includes('date') || q.includes('which day') || q.includes('what day') ||
+      q.includes('when is the celebration') || q.includes('when is it') ||
+      q.includes('which date') || q.includes('what date'))
     return answers.date;
 
-  if (q.includes('time') || q.includes('what time') || q.includes('start') || q.includes('starts') || q.includes('end') || q.includes('ends') || q.includes('how long'))
+  if (q.includes('time') || q.includes('what time') || q.includes('start') || q.includes('starts') ||
+      q.includes('begin') || q.includes('begins') || q.includes('end') || q.includes('ends') ||
+      q.includes('finish') || q.includes('finishes') || q.includes('how long') ||
+      q.includes('duration') || q.includes('how many hours'))
     return answers.timing;
 
-  if (q.includes('schedule') || q.includes('plan') || q.includes('what will happen') || q.includes('what is planned') || q.includes('what are we doing'))
+  if (q.includes('schedule') || q.includes('plan') || q.includes('what will happen') ||
+      q.includes('what is planned') || q.includes('what are we doing') ||
+      q.includes('what is the programme') || q.includes('what is the program') ||
+      q.includes('day look like') || q.includes('plan for the day') ||
+      q.includes('what happens before lunch') || q.includes('before lunch'))
     return answers.schedule;
 
-  if (q.includes('alcohol') || q.includes('liquor') || q.includes('drink') || q.includes('drinks'))
+  if (q.includes('alcohol') || q.includes('liquor') || q.includes('drink') ||
+      q.includes('drinks') || q.includes('wine') || q.includes('beer') || q.includes('alcoholic'))
     return answers.alcohol;
 
-  if (q.includes('decent') || q.includes('behavior') || q.includes('behaviour') || q.includes('conduct') || q.includes('rules') || q.includes('respect') || q.includes('appropriate'))
+  if (q.includes('decent') || q.includes('behavior') || q.includes('behaviour') ||
+      q.includes('conduct') || q.includes('rules') || q.includes('respect') ||
+      q.includes('appropriate') || q.includes('what are the rules') || q.includes('any rules') ||
+      q.includes('how should we behave'))
     return answers.conduct;
 
-  if (q.includes('attend') || q.includes('come') || q.includes('join') || q.includes('can i come') || q.includes('can i attend'))
+  if (q.includes('attend') || q.includes('come') || q.includes('join') ||
+      q.includes('can i come') || q.includes('can i attend') || q.includes('can i be there') ||
+      q.includes('can i join') || q.includes('am i allowed to attend'))
     return answers.attendance;
 
-  if (q.includes('event') || q.includes('celebration') || q.includes('teachers day') || q.includes('teachers\' day'))
+  if (q.includes('event') || q.includes('celebration') || q.includes("teachers' day") ||
+      q.includes('teachers day') || q.includes('teacher day') || q.includes('what is this about') ||
+      q.includes('tell me about the event') || q.includes('tell me about it') ||
+      q.includes('what is happening on sunday') || q.includes("what's happening on sunday"))
     return answers.event;
+
+  if (q === 'hi' || q === 'hello' || q === 'hey' || q.includes('good morning') ||
+      q.includes('good afternoon') || q.includes('good evening') ||
+      q.includes('thank you') || q.includes('thanks'))
+    return `You're most welcome! 😊 Ask me anything about Subhada's Teachers' Day Celebration. 🌸`;
 
   return `I'm not sure about that one. 😊 Please contact one of the organisers for confirmation.`;
 }
