@@ -1,3 +1,4 @@
+<!-- Subhada Celebration Buddy v8: relationship-aware conversational layer -->
 <!-- Subhada Celebration Buddy v7: conversational alias/intent layer -->
 <!DOCTYPE html>
 <html lang="en">
@@ -199,6 +200,15 @@ Soumodip: 7439211980`,
   swagatadi: `Swagata, also affectionately called Swagatadi, is the sister of Subhabrata Bhattacharjee (Subhada). She plays a major role in the decision-making and execution of Pointer Educare and is a core member of the management team. 🌸`,
   sudipta: `Sudipta Halder is a student of Subhada and also an Assistant Professor at Regent College. He plays a major role in teaching school-level students and is a decision-maker and core member of the management group. 🌸`,
   soumyadip: `Soumyadip is a student of Subhada and a core member of Pointer Educare and the management group. 🌸`,
+  relations: {
+    subhada_swagata: `Swagata (Swagatadi) is the sister of Subhabrata Bhattacharjee (Subhada). She plays a major role in the decision-making and execution of Pointer Educare and is a core member of the management team. 🌸`,
+    subhada_sudipta: `Sudipta Halder is a student of Subhabrata Bhattacharjee (Subhada). He is also an Assistant Professor at Regent College and a core member and decision-maker in the management group. 🌸`,
+    subhada_soumyadip: `Soumyadip is a student of Subhabrata Bhattacharjee (Subhada) and a core member of Pointer Educare and the management group. 🌸`,
+    swagatadi_sudipta: `Swagata (Swagatadi) and Sudipta Halder are both core members of the management group associated with Pointer Educare. Swagata is Subhada's sister, while Sudipta is Subhada's student. 🌸`,
+    swagatadi_soumyadip: `Swagata (Swagatadi) and Soumyadip are both core members of the management group associated with Pointer Educare. Swagata is Subhada's sister, while Soumyadip is Subhada's student. 🌸`,
+    sudipta_soumyadip: `Sudipta Halder and Soumyadip are both students of Subhabrata Bhattacharjee (Subhada) and core members of the management group. Sudipta is also an Assistant Professor at Regent College. 🌸`,
+    everyone: `Subhada (Subhabrata Bhattacharjee) is the central figure. Swagata (Swagatadi) is his sister. Sudipta Halder and Soumyadip are both his students. All four are from Bally and are associated with the management/activities around Pointer Educare. 🌸`
+  },
   bally: `Bally is located in Howrah district, West Bengal. Subhada, Swagata, Sudipta and Soumyadip are all from Bally. 📍`,
   attendance: `The attendance eligibility hasn't been specified here. Please contact one of the organisers to confirm. 😊`,
   welcome: `Welcome to Subhada's Teachers' Day Celebration! 🌸
@@ -230,7 +240,37 @@ function add(text, who='bot'){
 function findAnswer(question){
   const q=question.toLowerCase().trim();
 
-  // Name aliases: Subhada, Subhoda, Subho, Subha, Subha Da and Subhada all refer to Subhabrata Bhattacharjee.
+  // Relationship questions: check these BEFORE person-profile matching.
+  const hasAny = (...terms) => terms.some(term => q.includes(term));
+  const asksRelation = hasAny(
+    'relationship', 'relation', 'related', 'how is', 'how are', 'what is the relation',
+    'what is the relationship', 'who is.*to', 'to subhada', 'to subho', 'to subha'
+  );
+
+  if (asksRelation) {
+    if (hasAny('swagata','swagatadi','swagata di') && hasAny('subhada','subhoda','subho','subha','subhabrata'))
+      return answers.relations.subhada_swagata;
+
+    if (hasAny('sudipta','sudipto') && hasAny('subhada','subhoda','subho','subha','subhabrata'))
+      return answers.relations.subhada_sudipta;
+
+    if (hasAny('soumyadip','soumodip','soumyadeep') && hasAny('subhada','subhoda','subho','subha','subhabrata'))
+      return answers.relations.subhada_soumyadip;
+
+    if (hasAny('swagata','swagatadi','swagata di') && hasAny('sudipta','sudipto'))
+      return answers.relations.swagatadi_sudipta;
+
+    if (hasAny('swagata','swagatadi','swagata di') && hasAny('soumyadip','soumodip','soumyadeep'))
+      return answers.relations.swagatadi_soumyadip;
+
+    if (hasAny('sudipta','sudipto') && hasAny('soumyadip','soumodip','soumyadeep'))
+      return answers.relations.sudipta_soumyadip;
+
+    if (hasAny('all','everyone','four','each other'))
+      return answers.relations.everyone;
+  }
+
+  // Name aliases: Subhada, Subhoda, Subho, Subha and Subha Da all refer to Subhabrata Bhattacharjee.
   if (q.includes('subhabrata') || q.includes('subhada') || q.includes('subhoda') ||
       q.includes('subho') || q.includes('subha da') || q.includes('subha-da') ||
       q.includes('subha') || q.includes('subhada da'))
