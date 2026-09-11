@@ -276,10 +276,23 @@ function findAnswer(question){
       q.includes('what is happening on sunday') || q.includes("what's happening on sunday"))
     return answers.event;
 
-  if (q === 'hi' || q === 'hello' || q === 'hey' || q.includes('good morning') ||
-      q.includes('good afternoon') || q.includes('good evening') ||
-      q.includes('thank you') || q.includes('thanks'))
-    return `You're most welcome! 😊 Ask me anything about Subhada's Teachers' Day Celebration. 🌸`;
+  // Thank-you messages
+  if (
+    q.includes('thanks') || q.includes('thank you') || q.includes('thank u') ||
+    q.includes('thx') || q.includes('many thanks') || q.includes('thanks a lot') ||
+    q.includes('thank you so much')
+  )
+    return `You're most welcome! 😊🌸 I'm happy to help. Ask me anything else about Subhada's Teachers' Day Celebration!`;
+
+  // Friendly greetings
+  if (
+    /^(hi|hello|hey|hiya|hii|hiii)([!,. ]|$)/.test(q) ||
+    q.includes('hi there') || q.includes('hello there') ||
+    q.includes('good morning') || q.includes('good afternoon') ||
+    q.includes('good evening') || q.includes('good night') ||
+    q.includes('how are you') || q.includes('how r you')
+  )
+    return `Hello! 👋🌸 I'm here to help with Subhada's Teachers' Day Celebration. Ask me anything about the event! 😊`;
 
   return `I'm not sure about that one. 😊 Please contact one of the organisers for confirmation.`;
 }
