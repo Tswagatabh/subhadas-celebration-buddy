@@ -1,3 +1,4 @@
+<!-- Subhada Celebration Buddy v7: conversational alias/intent layer -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -75,6 +76,55 @@ input:focus{border-color:#c6969e}
   #messages{max-height:none}
 }
 </style>
+
+<script>
+/* v7 conversational understanding layer */
+(function () {
+  const originalAnswers = window.getBotResponse || window.getResponse || window.generateResponse;
+  window.SUBHADA_ALIAS_MAP = {
+    subhada: "Subhabrata Bhattacharjee",
+    subhoda: "Subhabrata Bhattacharjee",
+    subho: "Subhabrata Bhattacharjee",
+    subha: "Subhabrata Bhattacharjee",
+    "subha da": "Subhabrata Bhattacharjee",
+    "subhada da": "Subhabrata Bhattacharjee",
+    swagata: "Swagata",
+    swagatadi: "Swagata",
+    sudipta: "Sudipta Halder",
+    soumyadip: "Soumyadip"
+  };
+
+  window.normaliseCelebrationQuestion = function (input) {
+    let q = String(input || "").toLowerCase().trim();
+    q = q.replace(/[?!.:,;]/g, " ").replace(/\s+/g, " ");
+    q = q.replace(/\bwho's\b/g, "who is");
+    q = q.replace(/\bwhos\b/g, "who is");
+    q = q.replace(/\bsubhoda\b/g, "subhabrata bhattacharjee");
+    q = q.replace(/\bsubhada\b/g, "subhabrata bhattacharjee");
+    q = q.replace(/\bsubho\b/g, "subhabrata bhattacharjee");
+    q = q.replace(/\bsubha da\b/g, "subhabrata bhattacharjee");
+    q = q.replace(/\bsubhada da\b/g, "subhabrata bhattacharjee");
+    return q;
+  };
+
+  window.getCelebrationIntent = function (input) {
+    const q = window.normaliseCelebrationQuestion(input);
+    if (/\bthank(s| you)\b|\bthanks\b/.test(q)) return "thanks";
+    if (/\balcohol\b|\bdrink(ing)?\b|\bliquor\b|\bbooze\b/.test(q)) return "alcohol";
+    if (/\bbally\b/.test(q) && /\bwhere\b|\blocat|situat|district|place\b/.test(q)) return "bally";
+    if (/\bswagata\b|\bswagatadi\b/.test(q)) return "swagata";
+    if (/\bsudipta\b/.test(q)) return "sudipta";
+    if (/\bsoumyadip\b/.test(q)) return "soumyadip";
+    if (/\bsubhabrata bhattacharjee\b/.test(q) ||
+        /\bwho is\b.*\bsubha\b/.test(q) ||
+        /\bwho is\b.*\bsubho\b/.test(q) ||
+        /\btell me about\b.*\bsubha\b/.test(q) ||
+        /\btell me about\b.*\bsubho\b/.test(q)) return "subhada";
+    return null;
+  };
+})();
+</script>
+
 </head>
 <body>
 <div class="shell">
@@ -144,7 +194,12 @@ Swagatadi: 9674312689
 Sudiptoda: 9903950802
 Soumodip: 7439211980`,
   conduct: `It's a warm, homely celebration at a residential place, so everyone is requested to maintain decency and respect throughout the event. 😊`,
-  alcohol: `Alcohol consumption is strictly prohibited because the celebration is being held at a residential place.`,
+  alcohol: `No. As this is a Teachers' Day celebration, consumption of alcohol is strictly prohibited. 🚫`,
+  subhada: `Subhada is Subhabrata Bhattacharjee. He is the Founder & Director at Pointer Educare, Assistant Professor at SurTech College, Head of the Department at Khalisani Mahavidyalaya, Lecturer at Techno College Hooghly, and HOD of Bengal Business School. He is also an Educational Consultant with more than 16 years of experience in teaching and guiding students. 🌸`,
+  swagatadi: `Swagata, also affectionately called Swagatadi, is the sister of Subhabrata Bhattacharjee (Subhada). She plays a major role in the decision-making and execution of Pointer Educare and is a core member of the management team. 🌸`,
+  sudipta: `Sudipta Halder is a student of Subhada and also an Assistant Professor at Regent College. He plays a major role in teaching school-level students and is a decision-maker and core member of the management group. 🌸`,
+  soumyadip: `Soumyadip is a student of Subhada and a core member of Pointer Educare and the management group. 🌸`,
+  bally: `Bally is located in Howrah district, West Bengal. Subhada, Swagata, Sudipta and Soumyadip are all from Bally. 📍`,
   attendance: `The attendance eligibility hasn't been specified here. Please contact one of the organisers to confirm. 😊`,
   welcome: `Welcome to Subhada's Teachers' Day Celebration! 🌸
 
@@ -174,6 +229,33 @@ function add(text, who='bot'){
 
 function findAnswer(question){
   const q=question.toLowerCase().trim();
+
+  // Name aliases: Subhada, Subhoda, Subho, Subha, Subha Da and Subhada all refer to Subhabrata Bhattacharjee.
+  if (q.includes('subhabrata') || q.includes('subhada') || q.includes('subhoda') ||
+      q.includes('subho') || q.includes('subha da') || q.includes('subha-da') ||
+      q.includes('subha') || q.includes('subhada da'))
+    return answers.subhada;
+
+  if (q.includes('swagatadi') || q.includes('swagata') || q.includes('swagata di') ||
+      q.includes('swagata-di'))
+    return answers.swagatadi;
+
+  if (q.includes('sudipta') || q.includes('sudipto'))
+    return answers.sudipta;
+
+  if (q.includes('soumyadip') || q.includes('soumodip') || q.includes('soumyadeep'))
+    return answers.soumyadip;
+
+  if (q.includes('bally') || q.includes('where is bally') || q.includes('where is bali'))
+    return answers.bally;
+
+  // Thank-you messages
+  if (
+    q.includes('thanks') || q.includes('thank you') || q.includes('thank u') ||
+    q.includes('thx') || q.includes('many thanks') || q.includes('thanks a lot') ||
+    q.includes('thank you so much')
+  )
+    return `You're most welcome! 😊🌸 Looking forward to having you at the celebration!`;
 
   if (q.includes('participate') || q.includes('participation') || q.includes('can i perform') ||
       q.includes('perform in') || q.includes('perform at') || q.includes('take part') ||
@@ -275,14 +357,6 @@ function findAnswer(question){
       q.includes('tell me about the event') || q.includes('tell me about it') ||
       q.includes('what is happening on sunday') || q.includes("what's happening on sunday"))
     return answers.event;
-
-  // Thank-you messages
-  if (
-    q.includes('thanks') || q.includes('thank you') || q.includes('thank u') ||
-    q.includes('thx') || q.includes('many thanks') || q.includes('thanks a lot') ||
-    q.includes('thank you so much')
-  )
-    return `You're most welcome! 😊🌸 I'm happy to help. Ask me anything else about Subhada's Teachers' Day Celebration!`;
 
   // Friendly greetings
   if (
