@@ -1,4 +1,4 @@
-<!-- Subhada Celebration Buddy v8: relationship-aware conversational layer -->
+<!-- Subhada Celebration Buddy v9: celebration-focused identity + relationship-aware layer -->
 <!-- Subhada Celebration Buddy v7: conversational alias/intent layer -->
 <!DOCTYPE html>
 <html lang="en">
@@ -269,6 +269,15 @@ function findAnswer(question){
     if (hasAny('all','everyone','four','each other'))
       return answers.relations.everyone;
   }
+
+  // Bot identity: keep the assistant focused specifically on the Teachers' Day Celebration.
+  if (
+    q === 'who are you' || q === 'what are you' || q === 'who r you' ||
+    q.includes('tell me about yourself') || q.includes('tell me about you') ||
+    q.includes('what is your name') || q.includes('are you a chatbot') ||
+    q.includes('are you a bot') || q.includes('what do you do')
+  )
+    return `I'm Subhada's Celebration Buddy! 😊 I'm a virtual assistant created especially to help you with information about Subhada's Teachers' Day Celebration. You can ask me about the celebration, venue, timings, registration, activities, rules, or anything else related to the event. 🎉`;
 
   // Name aliases: Subhada, Subhoda, Subho, Subha and Subha Da all refer to Subhabrata Bhattacharjee.
   if (q.includes('subhabrata') || q.includes('subhada') || q.includes('subhoda') ||
