@@ -1,4 +1,4 @@
-<!-- Subhada Celebration Buddy v21: robust dress-code and timing intents -->
+<!-- Subhada Celebration Buddy v24: robust conversational intent handling -->
 <!-- Subhada Celebration Buddy v11: attendance and guest guidance -->
 <!-- Subhada Celebration Buddy v11: integrated conversational relationship engine -->
 <!-- Subhada Celebration Buddy v7: conversational alias/intent layer -->
@@ -413,7 +413,7 @@ function findAnswer(question){
 
   // Programme overview / plan / agenda
   // These cover natural questions such as "What is the plan?", "What's happening?" and "What is the agenda?"
-  if(has('what is the plan','whats the plan','what's the plan','what is the programme plan','what is the program plan','what is planned','what has been planned','what are the plans','what is the agenda','whats the agenda','what's the agenda','what is on the agenda','what is happening','whats happening','what's happening','what will we do','what are we doing','what is going to happen','what is the schedule for the day','day plan','plan for the day','programme plan','program plan','programme schedule','program schedule','event plan','event schedule','lineup','line up')) return answers.program;
+  if(has('what is the plan','whats the plan','what is the programme plan','what is the program plan','what is planned','what has been planned','what are the plans','what is the agenda','whats the agenda','what is on the agenda','what is happening','whats happening','what will we do','what are we doing','what is going to happen','what is the schedule for the day','day plan','plan for the day','programme plan','program plan','programme schedule','program schedule','event plan','event schedule','lineup','line up')) return answers.program;
   if(has('what should i expect','what can i expect','what to expect','what will happen at the celebration','what is planned for the day')) return answers.expectation;
   if(has('what happens during the program','what happens during the programme','what happens in the program','what happens in the programme','what will happen during the celebration')) return answers.program;
   if(has('short speech','will there be a speech','subhada speech','speech')) return answers.speech;
